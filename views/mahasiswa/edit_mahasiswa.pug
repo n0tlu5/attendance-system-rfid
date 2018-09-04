@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+  .container
+    p Edit Data
+    if errors
+        ul
+        each val in errors
+            li(class="alert alert-danger")= val.msg
+    else if complete
+        li(class="alert alert-success")= 'edited'
+    each val in results
+        form(method="POST", action='/mahasiswa/edit/'+val.nrp class="form-group")
+            input(type="text", name="nrp", value=val.nrp, class="form-control")
+            br
+            input(type="text", name="nama", value=val.nama, class="form-control")
+            br
+            input(type="year", name="angkatan", value=val.angkatan, class="form-control")
+            br
+            button(type="submit" class="btn btn-primary") edit

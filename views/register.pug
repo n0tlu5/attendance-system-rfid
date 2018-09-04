@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  if errors
+    ul
+      each val in errors
+        li(class="alert alert-danger")= val.msg
+  else if complete
+    li(class="alert alert-success")= 'Registration Success'
+  .container
+    form(method="POST", action="/register" class="form-group")
+      input(type="text", name="username", placeholder="username", class="form-control")
+      br
+      input(type="email", name="email", placeholder="E-mail", class="form-control")
+      br
+      input(type="password", name="password", placeholder="Password", class="form-control")
+      br
+      input(type="password", name="passwordMatch", placeholder="Re-type Password", class="form-control")
+      br
+      button(type="submit" class="btn btn-primary") register

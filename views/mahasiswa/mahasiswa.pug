@@ -1,0 +1,26 @@
+extends ../layout
+
+block content
+    .container
+        a(href="/mahasiswa/tambah") Tambah
+
+        table(class="table")
+            thead
+                tr
+                    th(scope="col") NRP
+                    th(scope="col") Nama
+                    th(scope="col") Angkatan
+                    th(scope="col") Action
+            tbody
+                if results
+                    each val in results
+                        tr
+                            th(scope="row")=val.nrp
+                            td=val.nama
+                            td=val.angkatan
+                            td
+                                a(href='/mahasiswa/edit/'+val.nrp) edit
+                                |
+                                ||
+                                |
+                                a(href='/mahasiswa/delete/'+val.nrp) delete

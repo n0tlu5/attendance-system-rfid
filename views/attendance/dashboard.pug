@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+    p menu search
+    table(class="table")
+        thead
+            tr
+                th(scope="col") No.
+                th(scope="col") NRP
+                th(scope="col") ID Kelas
+                th(scope="col") Waktu Kehadiran
+                th(scope="col") Action
+        tbody
+            -var i =1;
+            each val in result
+                tr
+                    th(scope="row")=i++
+                    td=val.student_id
+                    td=val.class_id
+                    td=val.time
+                    td
+                        a(href="/attendance/delete/"+val.id) delete

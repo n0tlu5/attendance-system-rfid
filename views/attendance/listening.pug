@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+    .container
+        p='Please scan your tag to login to'+classid
+
+    .box
+        .icon
+            .help(value="Scan your tag")
+
+    script.
+        var socket = io(window.location.hostname + ":8500");
+
+        socket.on('rfid', function(data){
+            $(".icon").addClass('one');
+            $(".help").value("wekk");
+            setTimeout(function() {
+                $(".icon").removeClass('one');
+                $(".help").value('Scan your tag');
+            });
+        });

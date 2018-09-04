@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+    .container
+        a(href="/kelas/tambah") Tambah
+
+        table(class="table")
+            thead
+                tr
+                    th(scope="col") ID
+                    th(scope="col") Nama Kelas
+                    th(scope="col") Action
+            tbody
+                if list
+                    each val in list
+                        tr
+                            th(scope="row")=val.id
+                            td
+                                a(href='/kelas/detail/'+val.id)=val.nama_kelas
+                            td
+                                a(href='/kelas/edit/'+val.id) edit
+                                |
+                                ||
+                                |
+                                a(href='/kelas/delete/'+val.id) delete

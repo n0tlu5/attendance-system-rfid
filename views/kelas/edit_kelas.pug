@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  .container
+    p Edit Data
+    if errors
+        ul
+        each val in errors
+            li(class="alert alert-danger")= val.msg
+    else if complete
+        li(class="alert alert-success")= 'edited'
+    each val in results
+        form(method="POST", action='/kelas/edit/'+val.id class="form-group")
+            input(type="text", name="nama", value=val.nama_kelas, class="form-control")
+            br
+            button(type="submit" class="btn btn-primary") edit
