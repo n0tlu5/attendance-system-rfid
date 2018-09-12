@@ -56,18 +56,23 @@ router.post('/register', function(req, res, next) {
     bcrypt.hash(password, 10, function(err, hash) {
       if(this.err) throw this.err;
       db.query('INSERT INTO users (username, email, password) VALUES(?,?,?)', [username, email, hash], function(err) {
-        if(err) throw err;
+        if(err){
+          res.render('error', { title: 'Bad Request' });
+        }else{
 
-        db.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields) {
-          if(error) throw error;
+          db.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields) {
+            if(err){
+              res.render('error', { title: 'Bad Request' });
+            }else{
+              const user_id =results[0];
 
-          const user_id =results[0];
-
-          req.login(user_id, function(err) {
-            if(err) throw err;
-            res.redirect('/');
+              req.login(user_id, function(err) {
+                if(err) throw err;
+                res.redirect('/');
+              });
+            }
           });
-        });
+        }
       });
     });
   }

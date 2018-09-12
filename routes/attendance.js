@@ -5,11 +5,14 @@ router.get('/', function(req, res, next) {
     const db = require('../db');
 
     db.query('SELECT * FROM kehadiran', function(err, result) {
-        if(err) throw err;
-        res.render('attendance/dashboard', {
-            title: 'Daftar Kehadiran',
-            result: result
-        });
+        if(err){
+            res.render('error', { title: 'Bad Request' });
+        }else{
+            res.render('attendance/dashboard', {
+                title: 'Daftar Kehadiran',
+                result: result
+            });
+        }
     })
 });
 
@@ -18,8 +21,11 @@ router.get('/delete/:id', function(req, res, next) {
     const attendance_id = req.params.id;
 
     db.query('DELETE FROM kehadiran WHERE id = ?', [attendance_id], function(err, result) {
-        if(err) throw err;
-        res.redirect('/attendance');
+        if(err){
+            res.render('error', { title: 'Bad Request' });
+        }else{
+            res.redirect('/attendance');
+        }
     })
 });
 
@@ -29,8 +35,11 @@ router.get('/checkin/:classid/:studentid', function(req, res, next) {
     const student_id = req.params.studentid;
 
     db.query('INSERT INTO kehadiran(class_id, student_id)', [class_id, student_id], function(err, result) {
-        if(err) throw err;
-        res.redirect('/attendance/success/'+class_id+'/'+student_id);
+        if(err){
+            res.render('error', { title: 'Bad Request' });
+        }else{
+            res.redirect('/attendance/success/'+class_id+'/'+student_id);
+        }
     })
 });
 
@@ -40,14 +49,16 @@ router.get('/success/:classid/:studentid', function(req, res, next){
     const db = require('../db');
 
     db.query('SELECT * FROM mahasiswa WHERE nrp = ?', [student_id], function(err, result) {
-        if(err) throw err;
-
-        res.render('attendance/success', {
-            title: 'Scan your tag',
-            name: result[0].nama,
-            classid: class_id,
-            studentid: student_id
-        });
+        if(err){
+            res.render('error', { title: 'Bad Request' });
+        }else{
+            res.render('attendance/success', {
+                title: 'Scan your tag',
+                name: result[0].nama,
+                classid: class_id,
+                studentid: student_id
+            });
+        }
     });
 });
 

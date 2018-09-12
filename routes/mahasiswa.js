@@ -46,9 +46,11 @@ router.post('/edit/:nrp', authenticationMiddleware(), function(req, res, next){
 
     const db = require('../db');
     db.query('UPDATE mahasiswa SET nrp = ?, nama = ?, angkatan = ? WHERE nrp = ?', [nrp, nama, angkatan, req.params.nrp], function(err) {
-      if(err) throw err;
-
-      res.redirect('/mahasiswa');
+      if(err){
+        res.render('error', { title: 'Bad Request' });
+      }else{
+        res.redirect('/mahasiswa');
+      }
     });
   }
 });
@@ -57,8 +59,11 @@ router.get('/delete/:nrp', authenticationMiddleware(), function(req, res, next){
   const db = require('../db');
 
   db.query('DELETE FROM mahasiswa WHERE nrp = ?',[req.params.nrp],function(err, results) {
-    if(err) throw err;
-    res.redirect('/mahasiswa');
+    if(err){
+      res.render('error', { title: 'Bad Request' });
+    }else{
+      res.redirect('/mahasiswa');
+    }
   })
 });
 
@@ -86,12 +91,14 @@ router.post('/tambah', authenticationMiddleware(), function(req, res, next){
 
     const db = require('../db');
     db.query('INSERT INTO mahasiswa (nrp, nama, angkatan) VALUES(?, ?, ?)', [nrp, nama, angkatan], function(err) {
-      if(err) throw err;
-
-      res.render('mahasiswa/tambah_mahasiswa', {
-        title: 'Tambah Mahasiswa',
-        complete: 'true'
-      });
+      if(err){
+        res.render('error', { title: 'Bad Request' });
+      }else{
+        res.render('mahasiswa/tambah_mahasiswa', {
+          title: 'Tambah Mahasiswa',
+          complete: 'true'
+        });
+      }
     })
   }
 });
