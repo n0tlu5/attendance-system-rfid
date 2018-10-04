@@ -10,6 +10,7 @@ block content
                     th(scope="col") NRP
                     th(scope="col") Nama
                     th(scope="col") Angkatan
+                    th(scope="col") Card ID
                     th(scope="col") Action
             tbody
                 if results
@@ -18,7 +19,12 @@ block content
                             th(scope="row")=val.nrp
                             td=val.nama
                             td=val.angkatan
+                            td=val.card_id
                             td
+                                a(href='/mahasiswa/link/'+val.nrp) link
+                                |
+                                ||
+                                |
                                 a(href='/mahasiswa/edit/'+val.nrp) edit
                                 |
                                 ||

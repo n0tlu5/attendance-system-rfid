@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var net = require('net');
 
 router.get('/', function(req, res, next) {
     const db = require('../db');
@@ -29,42 +30,9 @@ router.get('/delete/:id', function(req, res, next) {
     })
 });
 
-router.get('/checkin/:classid/:studentid', function(req, res, next) {
-    const db = require('../db');
-    const class_id = req.params.classid;
-    const student_id = req.params.studentid;
-
-    db.query('INSERT INTO kehadiran(class_id, student_id)', [class_id, student_id], function(err, result) {
-        if(err){
-            res.render('error', { title: 'Bad Request' });
-        }else{
-            res.redirect('/attendance/success/'+class_id+'/'+student_id);
-        }
-    })
-});
-
-router.get('/success/:classid/:studentid', function(req, res, next){
-    const class_id = req.params.classid;
-    const student_id = req.params.studentid;
-    const db = require('../db');
-
-    db.query('SELECT * FROM mahasiswa WHERE nrp = ?', [student_id], function(err, result) {
-        if(err){
-            res.render('error', { title: 'Bad Request' });
-        }else{
-            res.render('attendance/success', {
-                title: 'Scan your tag',
-                name: result[0].nama,
-                classid: class_id,
-                studentid: student_id
-            });
-        }
-    });
-});
-
 router.get('/listening/:classid', function(req, res, next){
     const class_id = req.params.classid;
-
+    const db = require('../db');
 
     res.render('attendance/listening', {
         title: 'Scan your tag',

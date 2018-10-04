@@ -6,6 +6,9 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var logger = require('morgan');
 
+const sHOST = '0.0.0.0';
+const sPORT = 1234;
+
 //auth packages
 var session = require('express-session');
 var passport = require('passport');
@@ -36,27 +39,27 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var options = {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database : process.env.DB_NAME
+	host: process.env.DB_HOST,
+	user: process.env.DB_USER,
+	password: process.env.DB_PASSWORD,
+	database : process.env.DB_NAME
 };
 
 var sessionStore = new MySQLStore(options);
 
 app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  store: sessionStore,
-  saveUninitialized: true,
-  // cookie: { secure: true }
+	secret: 'keyboard cat',
+	resave: false,
+	store: sessionStore,
+	saveUninitialized: true,
+	// cookie: { secure: true }
 }))
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(function(req, res, next) {
-  res.locals.isAuthenticated = req.isAuthenticated();
-  next();
+	res.locals.isAuthenticated = req.isAuthenticated();
+	next();
 })
 
 app.use('/', indexRouter);
@@ -65,43 +68,87 @@ app.use('/kelas', kelasRouter);
 app.use('/attendance', attendanceRouter);
 
 passport.use(new LocalStrategy(
-  function(username, password, done) {
-    const db = require('./db');
-
-    db.query('SELECT id, password FROM users WHERE username = ?', [username], function(err, results, fields) {
-      if(err) {return done(err)};
-
-      if(results.length === 0){
-        return done(null, false);
-      }else{
-        const hash = results[0].password.toString();
-
-      bcrypt.compare(password, hash, function(err, response) {
-        if(response === true) {
-          return done(null, {user_id: results[0].id});
-        } else {
-          return done(null, false);
-        }
-      });
-      }
-    })
-  }
-));
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-module.exports = app;
+	function(username, password, done) {
+		const db = require('./db');
+		
+		db.query('SELECT id, password FROM users WHERE username = ?', [username], function(err, results, fields) {
+			if(err) {return done(err)};
+			
+			if(results.length === 0){
+				return done(null, false);
+			}else{
+				const hash = results[0].password.toString();
+				
+				bcrypt.compare(password, hash, function(err, response) {
+					if(response === true) {
+						return done(null, {user_id: results[0].id});
+					} else {
+						return done(null, false);
+					}
+				});
+			}
+		})
+	}
+	));
+	
+	// Create a server instance, and chain the listen function to it
+	net.createServer(function(socket) {
+		console.log('CONNECTED: ' + socket.remoteAddress +':'+ socket.remotePort);
+		
+		// Add a 'data' event handler to this instance of socket
+		socket.on('data', function(data,q) {
+			if(q==1){
+				console.log('DATA ' + socket.remoteAddress + ': ' + data);
+				
+				db.query('SELECT nrp FROM mahasiswa WHERE card_id = ?', [data], function(err, result) {
+					if(err){
+						res.render('error', { title: 'Bad Request' });
+					}else{
+						socket.write(result[0].nrp);
+						const nrp = result[0].nrp;
+						db.query('INSERT INTO kehadiran(class_id, student_id) VALUES (?, ?)',[class_id, nrp], function(err){
+							if(err) throw err;
+						})
+					}
+				})
+			}else{
+				console.log('DATA ' + socket.remoteAddress + ': ' + data);
+				console.log(nrp);
+				
+				db.query('UPDATE mahasiswa SET card_id = ? WHERE nrp = ?', [data, nrp], function (err, result) {
+					if (err) {
+						res.render('error', { title: 'Bad Request' });
+					} else {
+						socket.write(nrp);
+						console.log("pertama");
+					}
+				})
+			}
+		});
+		
+		// Add a 'close' event handler to this instance of socket
+		socket.on('close', function(data) {
+			console.log('Socket connection closed... ');
+		});
+	}).listen(sPORT, sHOST);
+	
+	console.log('Server listening on ' + HOST +':'+ PORT);
+	
+	// catch 404 and forward to error handler
+	app.use(function(req, res, next) {
+		next(createError(404));
+	});
+	
+	// error handler
+	app.use(function(err, req, res, next) {
+		// set locals, only providing error in development
+		res.locals.message = err.message;
+		res.locals.error = req.app.get('env') === 'development' ? err : {};
+		
+		// render the error page
+		res.status(err.status || 500);
+		res.render('error');
+	});
+	
+	module.exports = app;
+	
