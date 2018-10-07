@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var net = require('net');
 
 /* GET users listing. */
 router.get('/', authenticationMiddleware(), function (req, res, next) {
