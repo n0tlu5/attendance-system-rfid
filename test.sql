@@ -27,15 +27,19 @@ CREATE TABLE IF NOT EXISTS `kehadiran` (
   KEY `FK_kehadiran_mahasiswa` (`student_id`),
   CONSTRAINT `FK_kehadiran_kelas` FOREIGN KEY (`class_id`) REFERENCES `kelas` (`id`),
   CONSTRAINT `FK_kehadiran_mahasiswa` FOREIGN KEY (`student_id`) REFERENCES `mahasiswa` (`nrp`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 -- Dumping structure for table test.kelas
 CREATE TABLE IF NOT EXISTS `kelas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nama_kelas` varchar(50) DEFAULT NULL,
+  `ruang` varchar(50) DEFAULT NULL,
+  `jadwal_hari` int(11) DEFAULT NULL,
+  `jam_mulai` time DEFAULT NULL,
+  `jam_selesai` time DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=136 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 -- Dumping structure for table test.kelas_mahasiswa
