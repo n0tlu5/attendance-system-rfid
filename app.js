@@ -5,10 +5,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var logger = require('morgan');
-var net = require('net');
-
-const sHOST = '0.0.0.0';
-const sPORT = 1234;
 
 //auth packages
 var session = require('express-session');
@@ -91,49 +87,6 @@ passport.use(new LocalStrategy(
 		})
 	}
 	));
-	
-	// Create a server instance, and chain the listen function to it
-	net.createServer(function(socket) {
-		console.log('CONNECTED: ' + socket.remoteAddress +':'+ socket.remotePort);
-		
-		// Add a 'data' event handler to this instance of socket
-		socket.on('data', function(data,q) {
-			if(q==1){
-				console.log('DATA ' + socket.remoteAddress + ': ' + data);
-				
-				db.query('SELECT nrp FROM mahasiswa WHERE card_id = ?', [data], function(err, result) {
-					if(err){
-						res.render('error', { title: 'Bad Request' });
-					}else{
-						socket.write(result[0].nrp);
-						const nrp = result[0].nrp;
-						db.query('INSERT INTO kehadiran(class_id, student_id) VALUES (?, ?)',[class_id, nrp], function(err){
-							if(err) throw err;
-						})
-					}
-				})
-			}else{
-				console.log('DATA ' + socket.remoteAddress + ': ' + data);
-				console.log(nrp);
-				
-				db.query('UPDATE mahasiswa SET card_id = ? WHERE nrp = ?', [data, nrp], function (err, result) {
-					if (err) {
-						res.render('error', { title: 'Bad Request' });
-					} else {
-						socket.write(nrp);
-						console.log("pertama");
-					}
-				})
-			}
-		});
-		
-		// Add a 'close' event handler to this instance of socket
-		socket.on('close', function(data) {
-			console.log('Socket connection closed... ');
-		});
-	}).listen(sPORT, sHOST);
-	
-	console.log('Server listening on ' + HOST +':'+ PORT);
 	
 	// catch 404 and forward to error handler
 	app.use(function(req, res, next) {

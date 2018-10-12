@@ -2,22 +2,28 @@ extends ../layout
 
 block content
     .container
-        a(href='/kelas/'+class_id+'/tambah') Tambah Mahasiswa
-
-        p List Mahasiwa
-        table(class="table")
-            thead
+        h1.display-7 List Mahasiwa
+        table(class="table table-striped")
+            thead.thead-dark
                 tr
                     th(scope="col") No.
                     th(scope="col") NRP
                     th(scope="col") Action
             tbody
+                -var i=1;
                 if results
-                    -var i=1;
                     each val in results
                         -var student_id=val.student_id;
                         tr
                             th(scope="row")=i++
                             td=student_id
                             td
-                                a(href='/kelas/'+class_id+'/'+student_id+'/delete') delete
+                                a(href='/kelas/'+class_id+'/'+student_id+'/delete')
+                                    button.btn.btn-danger(type='button') delete
+                form(method="POST", action='/kelas/'+class_id+'/tambah' class="form-group")
+                    tr
+                        th(scope="row")=i
+                        td
+                            input(type="text", name="nrp", placeholder="NRP", class="form-control")
+                        td
+                            button(type="submit" class="btn btn-primary") add

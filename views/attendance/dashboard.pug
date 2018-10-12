@@ -1,9 +1,8 @@
 extends ../layout
 
 block content
-    p menu search
-    table(class="table")
-        thead
+    table(class="table table-striped")
+        thead.thead-dark
             tr
                 th(scope="col") No.
                 th(scope="col") NRP
@@ -19,4 +18,5 @@ block content
                     td=val.class_id
                     td=val.date
                     td
-                        a(href="/attendance/delete/"+val.id) delete
+                        a(href="/attendance/delete/"+val.id)
+                            button.btn.btn-danger(type='button') delete

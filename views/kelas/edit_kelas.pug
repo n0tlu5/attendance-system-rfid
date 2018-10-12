@@ -13,4 +13,10 @@ block content
         form(method="POST", action='/kelas/edit/'+val.id class="form-group")
             input(type="text", name="nama", value=val.nama_kelas, class="form-control")
             br
+            input(type="text", name="ruang", value=val.ruang, class="form-control")
+            br
+            input(type="text", name="jadwal_hari", value=val.jadwal_hari, class="form-control")
+            br
+            input(type="text", name="sesi", value=val.sesi, class="form-control")
+            br
             button(type="submit" class="btn btn-primary") edit

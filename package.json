@@ -23,6 +23,9 @@
     "passport-local": "^1.0.0",
     "pug": "2.0.0-beta11",
     "rc522-rfid": "^14.1.10",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
+    "socketio": "^1.0.0",
+    "zerorpc": "^0.9.8"
   }
 }

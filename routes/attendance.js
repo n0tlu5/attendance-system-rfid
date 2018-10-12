@@ -5,7 +5,7 @@ var net = require('net');
 router.get('/', function(req, res, next) {
     const db = require('../db');
 
-    db.query('SELECT * FROM kehadiran', function(err, result) {
+    db.query('SELECT id, student_id, class_id, DATE_FORMAT(date,"%a, %b %e %Y. %H:%i:%S") date FROM kehadiran', function(err, result) {
         if(err){
             res.render('error', { title: 'Bad Request' });
         }else{
@@ -29,16 +29,5 @@ router.get('/delete/:id', function(req, res, next) {
         }
     })
 });
-
-router.get('/listening/:classid', function(req, res, next){
-    const class_id = req.params.classid;
-    const db = require('../db');
-
-    res.render('attendance/listening', {
-        title: 'Scan your tag',
-        classid: class_id
-    });
-});
-
 
 module.exports = router;

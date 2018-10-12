@@ -31,7 +31,8 @@ router.post('/:id/tambah', function(req, res, next) {
         const nrp = req.body.nrp;
     
         const db = require('../db');
-        db.query('INSERT INTO kelas_mahasiswa (student_id, class_id) SELECT * FROM (SELECT ?, ?) AS tmp WHERE NOT EXISTS (SELECT student_id FROM kelas_mahasiswa WHERE student_id = ?) LIMIT 1', [nrp, req.params.id, nrp], function(err) {
+        
+        db.query('INSERT INTO kelas_mahasiswa (student_id, class_id) VALUES(?, ?)', [nrp, req.params.id], function(err) {
             if(err){
                 res.render('error', { title: 'Bad Request' });
             }else{
@@ -58,7 +59,7 @@ router.get('/:id/:nrp/delete', authenticationMiddleware(), function(req, res, ne
 router.get('/detail/:id', authenticationMiddleware(), function(req, res, next) {
     const class_id=req.params.id;
     const db = require('../db');
-    db.query('SELECT * FROM kelas_mahasiswa WHERE class_id = ?', [class_id], function(err, results) {
+    db.query('SELECT * FROM kelas_mahasiswa WHERE class_id = ? ORDER BY student_id ASC', [class_id], function(err, results) {
         if(err) throw err;
 
         if(results.length === 0){
@@ -120,9 +121,12 @@ router.post('/edit/:id', authenticationMiddleware(), function(req, res, next) {
         });
     } else {
         const nama = req.body.nama;
+        const jadwal_hari = req.body.jadwal_hari;
+        const ruang = req.body.ruang;
+        const sesi = req.body.sesi;
     
         const db = require('../db');
-        db.query('UPDATE kelas SET nama_kelas = ? WHERE id = ?', [nama, req.params.id], function(err) {
+        db.query('UPDATE kelas SET nama_kelas = ?, ruang= ?, jadwal_hari = ?, sesi = ? WHERE id = ?', [nama, ruang, jadwal_hari, sesi, req.params.id], function(err) {
             if(err){
                 res.render('error', { title: 'Bad Request' });
             }else{
@@ -139,30 +143,43 @@ router.get('/tambah', authenticationMiddleware(), function(req, res, next) {
 router.post('/tambah', authenticationMiddleware(), function(req, res, next) {
     req.checkBody('nama', 'Nama Kelas field cannot be empty.').notEmpty();
     req.checkBody('nama', 'Nama Kelas must be between 4-15 characters long.').len(4, 15);
-
+    
     const errors = req.validationErrors();
-
     if(errors){
-        res.render('kelas/tambah_kelas', {
+        
+        res.render('kelas/kelas', {
         title: 'Tambah Kelas',
         errors: errors
         });
     } else{
         const nama = req.body.nama;
+        const jadwal_hari = req.body.jadwal_hari;
+        const ruang = req.body.ruang;
+        const sesi = req.body.sesi;
 
         const db = require('../db');
-        db.query('INSERT INTO kelas (nama_kelas) VALUES(?)', [nama], function(err) {
+        db.query('INSERT INTO kelas (nama_kelas, ruang, jadwal_hari, sesi) VALUES(?, ?, ?, ?)', [nama, ruang, jadwal_hari, sesi], function(err) {
             if(err){
-                res.render('error', { title: 'Bad Request' });
+                //res.render('error', { title: 'Bad Request' });
             }else{
-                res.render('kelas/tambah_kelas', {
-                    title: 'Tambah Kelas',
-                    complete: 'true'
-                });
+                res.redirect('/kelas');
             }
         })
     }
 });
+
+// router.get('/listen/:id', authenticationMiddleware(), function(req, res, next) {
+//     var zerorpc = require("zerorpc");
+
+// 	var client = new zerorpc.Client();
+// 	client.connect("tcp://10.151.36.198:4242");
+
+// 	client.invoke("hello", "RPC", function(error, res, more) {
+// 		console.log(res);
+// 	});
+
+//     res.render('kelas/tambah_kelas');``
+// });
 
 function authenticationMiddleware () {  
 	return (req, res, next) => {
