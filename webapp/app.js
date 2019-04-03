@@ -17,6 +17,7 @@ var indexRouter = require('./routes/index');
 var mahasiswaRouter = require('./routes/mahasiswa');
 var kelasRouter = require('./routes/kelas');
 var attendanceRouter = require('./routes/attendance');
+var rfidController = require('./controller/rfidController');
 
 var app = express();
 
@@ -63,6 +64,7 @@ app.use('/', indexRouter);
 app.use('/mahasiswa', mahasiswaRouter);
 app.use('/kelas', kelasRouter);
 app.use('/attendance', attendanceRouter);
+app.use('/rfid', rfidController);
 
 passport.use(new LocalStrategy(
 	function(username, password, done) {

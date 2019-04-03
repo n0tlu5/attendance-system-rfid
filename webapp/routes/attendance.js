@@ -1,11 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var net = require('net');
 
 router.get('/', function(req, res, next) {
     const db = require('../db');
 
-    db.query('SELECT id, student_id, class_id, DATE_FORMAT(date,"%a, %b %e %Y. %H:%i:%S") date FROM kehadiran', function(err, result) {
+    db.query('SELECT id, student_id, class_id, DATE_FORMAT(date,"%a, %b %e %Y. %H:%i:%S") date FROM kehadiran ORDER BY date DESC', function(err, result) {
         if(err){
             res.render('error', { title: 'Bad Request' });
         }else{
