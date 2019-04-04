@@ -2,18 +2,21 @@
 
 import RPi.GPIO as GPIO
 import SimpleMFRC522
-import MySQLdb
+import requests
+import json
 import time
 
+url = "http://10.151.254.155:3000/rfid/update/last"
+headers = {'Content-type': 'application/json', 'Accept': 'text/plain', 'keep_alive':'false'}
+
 reader = SimpleMFRC522.SimpleMFRC522()
-db = MySQLdb.connect("localhost","user","password","test" )
-cursor = db.cursor()
 
 while(1):
     try:
     	id, text = reader.read()
-		sql = "UPDATE last_scan SET cid = '%s' WHERE id = 1" % (id)
-		cursor.execute(sql)
+		data = {'cid': id}
+		r = requests.post(url, data=json.dumps(data), headers=headers)
+		print r.content
 		print "sleep for 2s"
 		time.sleep(2)
 

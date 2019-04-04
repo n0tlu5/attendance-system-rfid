@@ -19,6 +19,19 @@ router.post('/update/:nrp/:cid',function(req,res){
     })
 })
 
+router.post('/update/last',function(req,res){
+    const db = require('../db.js');
+    var cid=req.body.cid;
+
+    db.query('UPDATE last_scan SET cid = ? WHERE id = 1', [cid], function (err, result) {
+        if (err) {
+            res.send("db error");
+        }else{
+            res.send("success");
+        }
+    })
+})
+
 router.post('/',function(req,res){
     const db = require('../db.js');
     var cid=req.body.cid;
