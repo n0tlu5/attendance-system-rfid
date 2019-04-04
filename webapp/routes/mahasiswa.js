@@ -105,24 +105,13 @@ router.get('/link/:nrp', authenticationMiddleware(), function (req, res, next) {
 	const db = require('../db');
 	const nrp = req.params.nrp;
 
-	var zerorpc = require("zerorpc");
-
-	var client = new zerorpc.Client();
-	client.connect("tcp://10.151.36.198:4242");
-
-	client.invoke("holla", "RPC", function(error, res, more) {
-		if(!error){
-			var cid = res.toString('utf8');
-			// console.log(cid);
-			db.query('UPDATE mahasiswa SET card_id = ? WHERE nrp = ?', [cid, nrp], function (err, result) {
-				if (err) {
-					res.render('error', { title: 'Bad Request' });
-				}else{
-					res.redirect('/mahasiswa');
-				}
-			})
+	db.query('SELECT * from last_scan WHERE id = 1', function (err, result) {
+		if(!err){
+			res.render('mahasiswa/listening', { Title: 'link', results: result, nrp:nrp });
+		}else{
+			res.render('error', { title: 'Bad Request' });
 		}
-	});
+	})
 });
 
 function authenticationMiddleware() {

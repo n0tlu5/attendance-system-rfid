@@ -1,6 +1,24 @@
 var express = require('express');
 var router = express.Router();
 
+router.post('/update/:nrp/:cid',function(req,res){
+    const nrp = req.params.nrp;
+    const cid = req.params.cid;
+    const db = require('../db.js');
+
+    console.log(cid)
+    console.log(nrp)
+
+    db.query('UPDATE mahasiswa SET card_id = ? WHERE nrp = ?', [cid, nrp], function (err, result) {
+        if (err) {
+            res.render('error', { title: 'Bad Request' });
+        }else{
+            db.query('UPDATE last_scan SET cid = "tap and refresh to update card id" WHERE id=1');
+            res.redirect('/mahasiswa');
+        }
+    })
+})
+
 router.post('/',function(req,res){
     const db = require('../db.js');
     var cid=req.body.cid;
