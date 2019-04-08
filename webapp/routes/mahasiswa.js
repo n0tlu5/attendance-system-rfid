@@ -92,10 +92,7 @@ router.post('/tambah', authenticationMiddleware(), function (req, res, next) {
 			if (err) {
 				res.render('error', { title: 'Bad Request' });
 			} else {
-				res.render('mahasiswa/tambah_mahasiswa', {
-					title: 'Tambah Mahasiswa',
-					complete: 'true'
-				});
+				res.redirect('/mahasiswa');
 			}
 		})
 	}

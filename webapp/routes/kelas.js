@@ -123,10 +123,11 @@ router.post('/edit/:id', authenticationMiddleware(), function(req, res, next) {
         const nama = req.body.nama;
         const jadwal_hari = req.body.jadwal_hari;
         const ruang = req.body.ruang;
-        const sesi = req.body.sesi;
+        const jam_mulai = req.body.jam_mulai;
+        const jam_selesai = req.body.jam_selesai;
     
         const db = require('../db');
-        db.query('UPDATE kelas SET nama_kelas = ?, ruang= ?, jadwal_hari = ?, sesi = ? WHERE id = ?', [nama, ruang, jadwal_hari, sesi, req.params.id], function(err) {
+        db.query('UPDATE kelas SET nama_kelas = ?, ruang= ?, jadwal_hari = ?, jam_mulai = ?, jam_selesai = ? WHERE id = ?', [nama, ruang, jadwal_hari, jam_mulai, jam_selesai, req.params.id], function(err) {
             if(err){
                 res.render('error', { title: 'Bad Request' });
             }else{
@@ -155,31 +156,19 @@ router.post('/tambah', authenticationMiddleware(), function(req, res, next) {
         const nama = req.body.nama;
         const jadwal_hari = req.body.jadwal_hari;
         const ruang = req.body.ruang;
-        const sesi = req.body.sesi;
+        const jam_mulai = req.body.jam_mulai;
+        const jam_selesai = req.body.jam_selesai;
 
         const db = require('../db');
-        db.query('INSERT INTO kelas (nama_kelas, ruang, jadwal_hari, sesi) VALUES(?, ?, ?, ?)', [nama, ruang, jadwal_hari, sesi], function(err) {
+        db.query('INSERT INTO kelas (nama_kelas, ruang, jadwal_hari, jam_mulai, jam_selesai) VALUES(?, ?, ?, ?, ?)', [nama, ruang, jadwal_hari, jam_mulai, jam_selesai], function(err) {
             if(err){
-                //res.render('error', { title: 'Bad Request' });
+                res.render('error', { title: 'Bad Request' });
             }else{
                 res.redirect('/kelas');
             }
         })
     }
 });
-
-// router.get('/listen/:id', authenticationMiddleware(), function(req, res, next) {
-//     var zerorpc = require("zerorpc");
-
-// 	var client = new zerorpc.Client();
-// 	client.connect("tcp://10.151.36.198:4242");
-
-// 	client.invoke("hello", "RPC", function(error, res, more) {
-// 		console.log(res);
-// 	});
-
-//     res.render('kelas/tambah_kelas');``
-// });
 
 function authenticationMiddleware () {  
 	return (req, res, next) => {

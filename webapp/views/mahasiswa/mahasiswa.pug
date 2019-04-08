@@ -11,6 +11,17 @@ block content
                     th(scope="col") Card ID
                     th(scope="col") Action
             tbody
+                form(method="POST", action="/mahasiswa/tambah" class="form-group")
+                    tr
+                        td
+                            input(type="text", name="nrp", placeholder="NRP(05111...)", class="form-control")
+                        td
+                            input(type="text", name="nama", placeholder="Nama", class="form-control")
+                        td
+                            input(type="text", name="angkatan", placeholder="Angkatan", class="form-control")
+                        td &nbsp
+                        td
+                            button(type="submit" class="btn btn-primary") add
                 if results
                     each val in results
                         tr
@@ -26,14 +37,3 @@ block content
                                         button.btn.btn-primary(type='button') edit
                                     a(href='/mahasiswa/delete/'+val.nrp)
                                         button.btn.btn-danger(type='button') delete
-                form(method="POST", action="/mahasiswa/tambah" class="form-group")
-                    tr
-                        td
-                            input(type="text", name="nrp", placeholder="NRP", class="form-control")
-                        td
-                            input(type="text", name="nama", placeholder="Nama", class="form-control")
-                        td
-                            input(type="text", name="angkatan", placeholder="Angkatan", class="form-control")
-                        td &nbsp
-                        td
-                            button(type="submit" class="btn btn-primary") add
