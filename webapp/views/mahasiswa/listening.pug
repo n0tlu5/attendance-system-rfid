@@ -3,10 +3,11 @@ extends ../layout
 block content
     .container
         p="data to link :"
-        each val in results
-            form(method="POST", action='/rfid/update/'+nrp+'/'+val.cid class="form-group")
-                p="CARD ID : "+val.cid
-                p="NRP : "+nrp
-                button(type="submit" class="btn btn-primary") link!
+        if results
+            each val in results
+                form(method="POST", action='/rfid/update/'+nrp+'/'+val.cid class="form-group")
+                    p="CARD ID : "+val.cid
+                    p="NRP : "+nrp
+                    button(type="submit" class="btn btn-primary") link!
         
         p="tap and refresh to update card id"
