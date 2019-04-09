@@ -32,7 +32,7 @@ router.post('/update/last',function(req,res){
     })
 })
 
-router.post('/',function(req,res){
+router.post('/',function(req,respond){
     const db = require('../db.js');
     var cid=req.body.cid;
     var ruang=req.body.ruang;
@@ -56,22 +56,22 @@ router.post('/',function(req,res){
                                         throw err;
                                     }else{
                                         console.log('welcome ' + nrp);
-                                        res.send('success : {ruang: '+ ruang +', nrp: '+nrp+', card id: '+ cid +"}");
+                                        respond.send('success : {ruang: '+ ruang +', nrp: '+nrp+', card id: '+ cid +"}");
                                     }
                                 })
                             }else{
                                 console.log('sudah absen');
-                                res.send('sudah absen');
+                                respond.send('sudah absen');
                             }
                         })
                     }else{
                         console.log('ruang sedang tidak ada jadwal');
-                        res.send('ruang sedang tidak ada jadwal');
+                        respond.send('ruang sedang tidak ada jadwal');
                     }
                 })
             }else{
                 console.log('NRP not found');
-                res.send('NRP not found');
+                respond.send('NRP not found');
             }
         }
     });
