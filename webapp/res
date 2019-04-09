@@ -1,0 +1,3 @@
+2019-04-08T16:19:11.534938Z mysqld_safe Logging to syslog.
+2019-04-08T16:19:11.539708Z mysqld_safe Logging to '/var/log/mysql/error.log'.
+2019-04-08T16:19:11.543924Z mysqld_safe Directory '/var/run/mysqld' for UNIX socket file don't exists.

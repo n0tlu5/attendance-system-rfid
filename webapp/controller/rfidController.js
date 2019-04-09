@@ -47,7 +47,7 @@ router.post('/',function(req,respond){
                 db.query('SELECT id FROM kelas WHERE (ruang = ?) AND (jadwal_hari = DAYOFWEEK(CURDATE())) AND ((CURTIME()>=jam_mulai-10*60) OR (CURTIME()<=jam_selesai))', [ruang], function(err, res){
                     if(err) throw err;
                     if(res.length>0){
-                        db.query('select id from kehadiran where student_id= ? and class_id= ? and date=CURDATE()',[res[0].id, nrp], function(err){
+                        db.query('select id from kehadiran where student_id= ? and class_id= ? and date=CURDATE()',[res[0].id, nrp], function(err, result){
                             if(err) throw err;
                             if(result.length==0){
                                 db.query('INSERT INTO kehadiran(class_id, student_id) VALUES (?, ?)',[res[0].id, nrp], function(err){
