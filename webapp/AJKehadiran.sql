@@ -53,8 +53,8 @@ CREATE TABLE IF NOT EXISTS `kehadiran` (
   PRIMARY KEY (`id`),
   KEY `FK_kehadiran_kelas` (`class_id`),
   KEY `FK_kehadiran_mahasiswa` (`student_id`),
-  CONSTRAINT `FK_kehadiran_kelas` FOREIGN KEY (`class_id`) REFERENCES `kelas` (`id`),
-  CONSTRAINT `FK_kehadiran_mahasiswa` FOREIGN KEY (`student_id`) REFERENCES `mahasiswa` (`nrp`)
+  CONSTRAINT `FK_kehadiran_kelas` FOREIGN KEY (`class_id`) REFERENCES `kelas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_kehadiran_mahasiswa` FOREIGN KEY (`student_id`) REFERENCES `mahasiswa` (`nrp`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS `kelas_mahasiswa` (
   `class_id` int(11) NOT NULL,
   KEY `FK_kelas_mahasiswa_kelas` (`class_id`),
   KEY `FK_kelas_mahasiswa_mahasiswa` (`student_id`),
-  CONSTRAINT `FK_kelas_mahasiswa_kelas` FOREIGN KEY (`class_id`) REFERENCES `kelas` (`id`),
-  CONSTRAINT `FK_kelas_mahasiswa_mahasiswa` FOREIGN KEY (`student_id`) REFERENCES `mahasiswa` (`nrp`)
+  CONSTRAINT `FK_kelas_mahasiswa_kelas` FOREIGN KEY (`class_id`) REFERENCES `kelas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_kelas_mahasiswa_mahasiswa` FOREIGN KEY (`student_id`) REFERENCES `mahasiswa` (`nrp`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
