@@ -41,29 +41,38 @@ router.post('/',function(req,res){
     db.query('SELECT nrp FROM mahasiswa WHERE card_id = ?', [cid], function(err, result) {
         if(err){
             if(err) throw err;
-        }
-        if(result.length>0){
-            const nrp = result[0].nrp;
-            db.query('SELECT id FROM kelas WHERE (ruang = ?) AND (jadwal_hari = DAYOFWEEK(CURDATE())) AND ((CURTIME()>=jam_mulai-10*60) OR (CURTIME()<=jam_selesai))', [ruang], function(err, res){
-                if(err) throw err;
-                if(res.length>0){
-                    db.query('select id from kehadiran where student_id= ? and class_id= ? and date=CURDATE()',[res[0].id, nrp], function(err){
-                        if(result.length==0){
-                            db.query('INSERT INTO kehadiran(class_id, student_id) VALUES (?, ?)',[res[0].id, nrp], function(err){
-                                if(err) console.log(err);
-                                console.log('welcome ' + nrp);
-                                // res.send('success');
-                            })
-                        }
-                    })
-                }else{
-                    console.log('data not valid');
-                    // res.send('data is not valid');
-                }
-            })
-            res.send('ruang: '+ ruang +'; nrp: '+nrp+'; card id: '+ cid);
         }else{
-            res.send('failed');
+            if(result.length>0){
+                const nrp = result[0].nrp;
+                db.query('SELECT id FROM kelas WHERE (ruang = ?) AND (jadwal_hari = DAYOFWEEK(CURDATE())) AND ((CURTIME()>=jam_mulai-10*60) OR (CURTIME()<=jam_selesai))', [ruang], function(err, res){
+                    if(err) throw err;
+                    if(res.length>0){
+                        db.query('select id from kehadiran where student_id= ? and class_id= ? and date=CURDATE()',[res[0].id, nrp], function(err){
+                            if(err) throw err;
+                            if(result.length==0){
+                                db.query('INSERT INTO kehadiran(class_id, student_id) VALUES (?, ?)',[res[0].id, nrp], function(err){
+                                    if(err){
+                                        console.log(err)
+                                        throw err;
+                                    }else{
+                                        console.log('welcome ' + nrp);
+                                        res.send('success : {ruang: '+ ruang +', nrp: '+nrp+', card id: '+ cid +"}");
+                                    }
+                                })
+                            }else{
+                                console.log('sudah absen');
+                                res.send('sudah absen');
+                            }
+                        })
+                    }else{
+                        console.log('ruang sedang tidak ada jadwal');
+                        res.send('ruang sedang tidak ada jadwal');
+                    }
+                })
+            }else{
+                console.log('NRP not found');
+                res.send('NRP not found');
+            }
         }
     });
 });
